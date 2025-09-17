@@ -1,0 +1,21 @@
+{
+  "businessType": "plumber",
+  "goal": "calls",
+  "language": "es",
+  "style": { 
+    "vibe": "moderno", 
+    "colorSeed": "#1f8ecd", 
+    "density": "cozy" 
+  },
+  "assets": [{ "url": "upload://logo.png", "kind": "logo" }],
+  "contact": { 
+    "phone": "+13055551234", 
+    "hours": "L–S 8:00–18:00" 
+  },
+  "areas": ["Hialeah","Miami Lakes"],
+  "services": [
+    { "title": "Destapes" }, 
+    { "title": "Fugas" }, 
+    { "title": "Calentadores" }
+  ]
+}
