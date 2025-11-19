@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profile         RealtorProfile?
+  generatedContent GeneratedContentItem[]
+  calendarSlots   CalendarSlot[]
+}
+
+model RealtorProfile {
+  id                String   @id @default(uuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name              String
+  marketCity        String
+  marketState       String
+  yearsExperience   Int
+  targetAudience    String
+  preferredPlatforms String // Stored as comma-separated values or JSON
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model GeneratedContentItem {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   // "LISTING" or "IDEA"
+  inputData String   // JSON string of inputs
+  outputData String  // JSON string of AI results
+  createdAt DateTime @default(now())
+
+  calendarSlots CalendarSlot[]
+}
+
+model CalendarSlot {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date          DateTime // The specific date
+  timeSlot      String   // "MORNING", "AFTERNOON", "EVENING"
+  contentItemId String?
+  contentItem   GeneratedContentItem? @relation(fields: [contentItemId], references: [id])
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([userId, date, timeSlot]) // Prevent duplicate slots for same time
+}
